@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#101411"><meta name="description" content="Your personal weekly workout and streak tracker.">
+<link rel="manifest" href="manifest.webmanifest"><link rel="apple-touch-icon" href="icons/icon-192.png">
+<title>FitStreak — Workout Tracker</title>
+<style>
+:root{color-scheme:dark;--bg:#101411;--card:#1a211c;--panel:#242d26;--line:#303c33;--text:#f2f5f1;--muted:#9aa89d;--accent:#b7f36b;--accentText:#17210d;--danger:#ff8b8b}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font:15px system-ui,-apple-system,Segoe UI,sans-serif;padding:env(safe-area-inset-top) 0 env(safe-area-inset-bottom)}
+button,input,select{font:inherit}button{cursor:pointer;color:inherit}.app{max-width:680px;margin:auto;padding:20px 16px 42px}.top{display:flex;justify-content:space-between;align-items:center;margin:5px 0 20px}.eyebrow{font-size:11px;letter-spacing:2px;color:var(--muted);font-weight:700}.brand{font-size:27px;font-weight:850;letter-spacing:-1px;margin-top:3px}.brand span{color:var(--accent)}.sub{color:var(--muted);font-size:13px;margin-top:4px}.logo{width:48px;height:48px;border-radius:16px;background:var(--accent);color:var(--accentText);display:grid;place-items:center;font-size:25px;font-weight:900}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:9px}.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:15px;margin-bottom:13px}.stat{background:var(--panel);border-radius:13px;padding:12px;min-width:0}.num{font-size:25px;font-weight:850;letter-spacing:-1px}.statlabel{font-size:11px;color:var(--muted);margin-top:3px}.sectionhead{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:13px}.sectionhead h2{font-size:17px;margin:0}.muted{color:var(--muted)}.tiny{font-size:12px}.days{display:grid;grid-template-columns:repeat(7,1fr);gap:6px}.day{border:1px solid var(--line);background:var(--panel);border-radius:12px;padding:9px 2px;text-align:center;font-size:11px}.day strong{display:block;font-size:14px;margin-bottom:5px}.day.active{background:var(--accent);color:var(--accentText);border-color:var(--accent);font-weight:800}.day .mark{font-size:10px;min-height:12px}.progress{height:9px;background:var(--panel);border-radius:30px;overflow:hidden}.progress>div{height:100%;width:0;background:var(--accent);border-radius:30px;transition:width .2s}.row{display:flex;align-items:center;gap:11px}.exercise{display:flex;align-items:center;gap:11px;padding:13px 0;border-bottom:1px solid var(--line)}.exercise:last-child{border:0}.check{width:24px;height:24px;flex:none;border:1.5px solid #728174;border-radius:8px;background:transparent;display:grid;place-items:center}.check.done{background:var(--accent);border-color:var(--accent);color:var(--accentText);font-weight:900}.exname{font-weight:700;font-size:14px}.dose{font-size:12px;color:var(--muted);margin-top:3px}.strike{opacity:.45;text-decoration:line-through}.btn{border:0;border-radius:12px;padding:11px 14px;background:var(--accent);color:var(--accentText);font-weight:800}.btn.secondary{background:var(--panel);border:1px solid var(--line);color:var(--text)}.btn.ghost{background:transparent;border:1px solid var(--line);color:var(--muted)}.btn.danger{color:var(--danger);background:transparent;border:1px solid var(--line)}.iconbtn{background:transparent;border:0;color:var(--muted);padding:7px;font-size:13px}.field{width:100%;padding:12px;border:1px solid var(--line);border-radius:11px;background:var(--panel);color:var(--text);outline:none}.field:focus{border-color:var(--accent)}.formrow{display:grid;grid-template-columns:1fr 1fr;gap:9px}.daychecks{display:grid;grid-template-columns:repeat(7,1fr);gap:5px}.daychecks label{background:var(--panel);border:1px solid var(--line);padding:9px 0;border-radius:10px;text-align:center;font-size:11px}.daychecks input{accent-color:var(--accent)}.hidden{display:none!important}.modalback{position:fixed;inset:0;background:#000a;display:flex;align-items:flex-end;justify-content:center;padding:12px;z-index:10}.modal{width:min(100%,600px);background:var(--card);border:1px solid var(--line);border-radius:22px;padding:20px;max-height:90dvh;overflow:auto}.modal h2{margin:0 0 16px;font-size:19px}.fieldlabel{display:block;font-size:12px;color:var(--muted);margin:12px 0 6px}.historyitem{display:flex;justify-content:space-between;padding:11px 0;border-bottom:1px solid var(--line);font-size:13px}.notice{background:#293322;border:1px solid #526b38;color:#d8f6b4;border-radius:13px;padding:12px;font-size:12px;line-height:1.5}.footer{text-align:center;color:var(--muted);font-size:11px;padding:12px}.install{display:none}.empty{text-align:center;color:var(--muted);padding:22px 8px;font-size:13px}
+@media(min-width:600px){.app{padding-top:30px}.modalback{align-items:center}}
+</style>
+</head>
+<body><main class="app">
+<header class="top"><div><div class="eyebrow">YOUR PERSONAL TRAINING LOG</div><div class="brand">FIT<span>STREAK</span></div><div class="sub" id="dateLine">Build consistency, one day at a time.</div></div><div class="logo">↗</div></header>
+<section class="grid" style="margin-bottom:13px">
+ <div class="stat"><div class="num" id="currentStreak">0</div><div class="statlabel">🔥 CURRENT STREAK</div></div>
+ <div class="stat"><div class="num" id="bestStreak">0</div><div class="statlabel">🏆 BEST STREAK</div></div>
+ <div class="stat"><div class="num" id="workouts">0</div><div class="statlabel">✓ WORKOUT DAYS</div></div>
+</section>
+<section class="card">
+ <div class="sectionhead"><h2>Today's progress</h2><b id="percent">0%</b></div><div class="progress"><div id="progressBar"></div></div>
+ <div class="row" style="justify-content:space-between;margin-top:9px"><span class="tiny muted" id="doneLabel">0 completed</span><span class="tiny muted" id="leftLabel">0 remaining</span></div>
+</section>
+<section class="card">
+ <div class="sectionhead"><h2>Weekly plan</h2><span class="tiny muted">Tap a day</span></div><div class="days" id="days"></div>
+</section>
+<section class="card">
+ <div class="sectionhead"><div><h2 id="workoutTitle">Today's workout</h2><div class="tiny muted" id="workoutSub"></div></div><button class="btn" id="addBtn">＋ Add</button></div>
+ <div id="exerciseList"></div><div id="empty" class="empty hidden">🌿 Recovery day. Rest is part of progress.<br>You can still add an activity.</div>
+ <div class="row" style="margin-top:13px"><button class="btn secondary" style="flex:1" id="markAll">Mark all complete</button><button class="btn ghost" id="clearDay">Clear ticks</button></div>
+</section>
+<section class="card">
+ <div class="sectionhead"><h2>Your stats</h2><span class="tiny muted">All time</span></div>
+ <div class="grid" style="grid-template-columns:1fr 1fr">
+  <div class="stat"><div class="num" id="exerciseTotal">0</div><div class="statlabel">EXERCISES DONE</div></div>
+  <div class="stat"><div class="num" id="rate">0%</div><div class="statlabel">COMPLETION RATE</div></div>
+ </div>
+ <div class="row" style="justify-content:space-between;margin:14px 0 8px"><span class="tiny muted">This week</span><b class="tiny" id="weekCount">0 / 6 workouts</b></div><div class="progress"><div id="weekBar"></div></div>
+</section>
+<section class="card">
+ <div class="sectionhead"><h2>Manage</h2></div>
+ <div class="row" style="flex-wrap:wrap"><button class="btn secondary" id="manageBtn">⚙ Edit weekly plan</button><button class="btn secondary" id="historyBtn">▤ History</button><button class="btn secondary install" id="installBtn">↓ Install app</button></div>
+ <p class="tiny muted" style="line-height:1.5;margin:13px 0 0">Your data is stored on this device. Use Export backup occasionally to keep a copy.</p>
+ <div class="row" style="margin-top:12px;flex-wrap:wrap"><button class="btn ghost" id="exportBtn">Export backup</button><button class="btn ghost" id="importBtn">Import backup</button><input type="file" id="importFile" accept="application/json" class="hidden"></div>
+</section>
+<div class="footer">CONSISTENCY OVER INTENSITY · FITSTREAK</div>
+</main>
+<div class="modalback hidden" id="modalBack"><div class="modal"><div class="row" style="justify-content:space-between"><h2 id="modalTitle">Add exercise</h2><button class="iconbtn" id="closeModal">✕</button></div>
+ <label class="fieldlabel">Exercise name</label><input class="field" id="name" placeholder="e.g. Incline push-ups">
+ <label class="fieldlabel">Sets, reps or duration</label><input class="field" id="dose" placeholder="e.g. 2 × 12 or 30 seconds">
+ <label class="fieldlabel">Schedule on</label><div class="daychecks" id="assignDays"></div>
+ <div class="row" style="margin-top:18px"><button class="btn" style="flex:1" id="saveExercise">Save exercise</button><button class="btn danger hidden" id="deleteExercise">Delete</button></div>
+</div></div>
+<div class="modalback hidden" id="historyBack"><div class="modal"><div class="row" style="justify-content:space-between"><h2>Workout history</h2><button class="iconbtn" id="closeHistory">✕</button></div><div id="historyList"></div></div></div>
+<script>
+(()=>{
+const $=id=>document.getElementById(id),days=['Mon','Tue','Wed','Thu','Fri','Sat','Sun'],full=['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'];
+const starter=[
+[['Push-ups','2 × 12'],['Squats','2 × 15'],['Pull-ups','2 × 4'],['Glute bridges','2 × 15'],['Plank','2 × 30 sec'],['Squat jumps','2 × 8']],
+[['Push-ups','2 × 10'],['Reverse lunges','2 × 10 each leg'],['Pull-ups','2 × 3'],['Superman hold','2 × 20 sec'],['Plank','2 × 30 sec'],['Running','8 minutes']],
+[['Pike push-ups','2 × 8'],['Squats','2 × 15'],['Pull-ups','2 × 4'],['Calf raises','2 × 20'],['Side plank','2 × 20 sec/side'],['Broad jumps','2 × 5']],
+[['Push-ups','2 × 10'],['Reverse lunges','2 × 10 each leg'],['Pull-ups','2 × 3'],['Glute bridges','2 × 15'],['Dead bug','2 × 10 each side'],['Running','8 minutes']],
+[['Push-ups','2 × 12'],['Squats','2 × 15'],['Pull-ups','2 × 4'],['Pike push-ups','2 × 8'],['Calf raises','2 × 20'],['Vertical jumps','2 × 8']],
+[['Push-ups','2 × 10'],['Lunges','2 × 10 each leg'],['Pull-ups','2 × 3'],['Superman hold','2 × 20 sec'],['Plank','2 × 30 sec'],['Running','8 minutes']],[]];
+const fresh=()=>({items:starter.map((a,i)=>a.map(([name,dose])=>({id:'p'+i+'_'+name,name,dose}))),history:{},best:0});
+let db;try{db=JSON.parse(localStorage.getItem('fitstreak_db_v1'))||fresh();if(!db.items||db.items.length!==7)db=fresh()}catch(e){db=fresh()}
+let selected=idx(today()),editing=null,assigned=new Set(),deferred=null;
+function today(){return new Date().toLocaleDateString('en-CA')}
+function idx(d){return (new Date(d+'T12:00:00').getDay()+6)%7}
+function shift(d,n){let x=new Date(d+'T12:00:00');x.setDate(x.getDate()+n);return x.toLocaleDateString('en-CA')}
+function save(){localStorage.setItem('fitstreak_db_v1',JSON.stringify(db))}
+function dayItems(i){return db.items[i]||[]}
+function targetDate(){return shift(today(),selected-idx(today()))}
+function isDone(d){let a=dayItems(idx(d));return a.length>0&&a.every(x=>(db.history[d]?.done||[]).includes(x.id))}
+function streak(){let dates=Object.keys(db.history).filter(isDone).sort(),best=0,run=0,prev='';for(let d of dates){run=prev&&shift(prev,1)===d?run+1:1;best=Math.max(best,run);prev=d}let d=today(),cur=0;if(!isDone(d)&&dayItems(idx(d)).length)d=shift(d,-1);while(isDone(d)){cur++;d=shift(d,-1)}return [cur,Math.max(best,db.best||0)]}
+function esc(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function render(){
+ const t=today(),di=idx(t),d=targetDate(),a=dayItems(selected),done=db.history[d]?.done||[],count=done.filter(id=>a.some(x=>x.id===id)).length,p=a.length?Math.round(count/a.length*100):0;
+ $('dateLine').textContent=new Date().toLocaleDateString(undefined,{weekday:'long',month:'long',day:'numeric'});
+ $('days').innerHTML=days.map((x,i)=>`<button class="day ${i===selected?'active':''}" data-day="${i}"><strong>${x}</strong><div class="mark">${isDone(shift(t,i-di))?'✓':i===di?'●':i===6?'REST':'·'}</div></button>`).join('');
+ $('workoutTitle').textContent=selected===di?"Today's workout":full[selected]+"'s workout";$('workoutSub').textContent=a.length?`${a.length} exercises scheduled`:'Recovery / rest day';
+ $('exerciseList').innerHTML=a.map(x=>{let yes=done.includes(x.id);return `<div class="exercise"><button class="check ${yes?'done':''}" data-check="${esc(x.id)}">${yes?'✓':''}</button><div style="flex:1;min-width:0"><div class="exname ${yes?'strike':''}">${esc(x.name)}</div><div class="dose">${esc(x.dose)}</div></div><button class="iconbtn" data-edit="${esc(x.id)}">Edit</button></div>`}).join('');
+ $('empty').classList.toggle('hidden',a.length>0);$('percent').textContent=p+'%';$('progressBar').style.width=p+'%';$('doneLabel').textContent=count+' completed';$('leftLabel').textContent=(a.length-count)+' remaining';
+ $('markAll').disabled=!a.length;$('markAll').style.opacity=a.length?1:.45;
+ $('clearDay').disabled=!done.length;$('clearDay').style.opacity=done.length?1:.45;
+ let [cur,best]=streak();$('currentStreak').textContent=cur;$('bestStreak').textContent=best;
+ let completed=Object.keys(db.history).filter(isDone);$('workouts').textContent=completed.length;
+ $('exerciseTotal').textContent=Object.values(db.history).reduce((s,h)=>s+h.done.length,0);
+ let scheduled=Object.keys(db.history).reduce((s,d)=>s+dayItems(idx(d)).length,0),ticks=Object.values(db.history).reduce((s,h)=>s+h.done.length,0);
+ $('rate').textContent=(scheduled?Math.round(ticks/scheduled*100):0)+'%';
+ let monday=shift(t,-di),week=Array.from({length:6},(_,i)=>shift(monday,i)).filter(isDone).length;
+ $('weekCount').textContent=week+' / 6 workouts';$('weekBar').style.width=(week/6*100)+'%';
+}
+$('days').onclick=e=>{let b=e.target.closest('[data-day]');if(b){selected=+b.dataset.day;render()}};
+$('exerciseList').onclick=e=>{let b=e.target.closest('[data-check],[data-edit]');if(!b)return;let d=targetDate();if(b.dataset.check){let h=db.history[d]||(db.history[d]={done:[]}),id=b.dataset.check;h.done=h.done.includes(id)?h.done.filter(x=>x!==id):[...h.done,id];save();render()}else openEdit(b.dataset.edit)};
+function openForm(){ $('modalBack').classList.remove('hidden')}
+function closeForm(){ $('modalBack').classList.add('hidden');editing=null}
+function renderAssign(){$('assignDays').innerHTML=days.map((d,i)=>`<label><input type="checkbox" value="${i}" ${assigned.has(i)?'checked':''}> ${d}</label>`).join('')}
+$('assignDays').onchange=()=>{assigned=new Set([...$('assignDays').querySelectorAll('input:checked')].map(x=>+x.value))};
+$('addBtn').onclick=()=>{editing=null;assigned=new Set([selected]);$('modalTitle').textContent='Add exercise';$('name').value='';$('dose').value='2 × 10';$('deleteExercise').classList.add('hidden');renderAssign();openForm()};
+function openEdit(id){let x=db.items.flat().find(x=>x.id===id);if(!x)return;editing=id;assigned=new Set(db.items.map((a,i)=>a.some(y=>y.id===id)?i:-1).filter(i=>i>=0));$('modalTitle').textContent='Edit exercise';$('name').value=x.name;$('dose').value=x.dose;$('deleteExercise').classList.remove('hidden');renderAssign();openForm()}
+$('saveExercise').onclick=()=>{let name=$('name').value.trim(),dose=$('dose').value.trim();if(!name||!assigned.size){$('name').focus();return}if(editing){db.items.forEach(a=>{let x=a.find(x=>x.id===editing);if(x){x.name=name;x.dose=dose}});db.items=db.items.map(a=>a.filter(x=>x.id!==editing));assigned.forEach(i=>db.items[i].push({id:editing,name,dose}))}else assigned.forEach(i=>db.items[i].push({id:'u'+Date.now()+Math.random().toString(36).slice(2),name,dose}));save();closeForm();render()};
+$('deleteExercise').onclick=()=>{if(!editing)return;db.items=db.items.map(a=>a.filter(x=>x.id!==editing));Object.values(db.history).forEach(h=>h.done=h.done.filter(x=>x!==editing));save();closeForm();render()};
+$('closeModal').onclick=closeForm;$('modalBack').onclick=e=>{if(e.target===$('modalBack'))closeForm()};
+$('manageBtn').onclick=()=>$('addBtn').click();
+$('markAll').onclick=()=>{let h=db.history[targetDate()]||(db.history[targetDate()]={done:[]});h.done=dayItems(selected).map(x=>x.id);save();render()};
+$('clearDay').onclick=()=>{if(db.history[targetDate()])db.history[targetDate()].done=[];save();render()};
+$('historyBtn').onclick=()=>{let ds=Object.keys(db.history).sort().reverse().slice(0,60);$('historyList').innerHTML=ds.length?ds.map(d=>`<div class="historyitem"><span>${new Date(d+'T12:00:00').toLocaleDateString(undefined,{weekday:'short',day:'numeric',month:'short',year:'numeric'})}</span><b>${isDone(d)?'✓ Complete':(db.history[d].done.length+' / '+dayItems(idx(d)).length)}</b></div>`).join(''):'<div class="empty">No activity yet. Your completed days will appear here.</div>';$('historyBack').classList.remove('hidden')};
+$('closeHistory').onclick=()=>$('historyBack').classList.add('hidden');$('historyBack').onclick=e=>{if(e.target===$('historyBack'))$('historyBack').classList.add('hidden')};
+$('exportBtn').onclick=()=>{let blob=new Blob([JSON.stringify(db,null,2)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='fitstreak-backup.json';a.click();URL.revokeObjectURL(a.href)};
+$('importBtn').onclick=()=>$('importFile').click();$('importFile').onchange=async e=>{try{let x=JSON.parse(await e.target.files[0].text());if(!x.items||!x.history||x.items.length!==7)throw Error();db=x;save();render();alert('Backup restored.')}catch(err){alert('That backup file is not valid.')}e.target.value=''};
+window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();deferred=e;$('installBtn').style.display='inline-block'});
+$('installBtn').onclick=async()=>{if(deferred){deferred.prompt();await deferred.userChoice;deferred=null}else alert('In Chrome, open ⋮ menu → Add to Home screen or Install app.')};
+if('serviceWorker'in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(()=>{}));
+render();
+})();
+</script>
+</body></html>
